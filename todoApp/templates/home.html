@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #6200ea;
+            color: white;
+            padding: 1rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color: #6200ea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h2 {
+            margin-top: 1.5rem;
+            border-bottom: 2px solid #6200ea;
+            padding-bottom: 0.3rem;
+        }
+
+        ol {
+            padding-left: 1.5rem;
+        }
+
+        ol li {
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .add-task {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #6200ea;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+        }
+
+        .add-task:hover {
+            background-color: #5a00d0;
+        }
+
+        .completed-task {
+            text-decoration: line-through;
+            color: #777;
+        }
+        .task-link {
+    display: inline;
+    margin-right: 10px;
+}
+
+.task-form {
+    display: inline;
+}
+
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>To Do List</h1>
+    </header>
+
+    <div class="container">
+        <a href="{% url 'addTask' %}" class="add-task">+ Add a New Task</a>
+        
+        <form method="POST" action="{% url 'home'%}" class="search-form">
+            {% csrf_token %}
+            <input type="text" placeholder="Search" name="query" >
+            <button type="submit">Search</button>
+        </form>
+
+        <div>
+            <ol>
+                {%for task in filtered%}
+                    <li>
+                        <a href="{% url 'description' task.id %}" class="task-link">{{ task.title }}</a>
+                    </li>
+                {%endfor%}
+            </ol>
+        </div>
+
+        <h2>Incomplete Tasks</h2>
+        <ol>
+            {% for task in incompleted_tasks %}
+                {%if not task.isCompleted%}
+                <li>
+                    <a href="{% url 'description' task.id %}" class="task-link">{{ task.title }}</a>
+                    <form method="POST" action="{% url 'update_home' task.id %}" class="task-form">
+                        {% csrf_token %}
+                        <input type="checkbox" name="isCompleted" {% if task.isCompleted %}checked{% endif %} onchange="this.form.submit()">
+                    </form>
+                    <a href="{% url 'delete' task.id %}" style="color:red;">Delete</a>
+                    <a href="{% url 'edit' task.id %}" style="color:green;">Edit</a>
+                </li>
+                
+                {%endif%}  
+                {% empty %}   
+                <p>No uncompleted tasks. You're all caught up!</p>        
+            {% endfor %}
+          
+
+        </ol>
+
+        <h2>Completed Tasks</h2>
+        <ol>
+            {% for task in completed_tasks %}
+                {%if task.isCompleted%}
+                <li>
+                    <a href="{% url 'description' task.id %}" class="task-link">{{ task.title }}</a>
+                    <form method="POST" action="{% url 'update_home' task.id %}" class="task-form">
+                        {% csrf_token %}
+                        <input type="checkbox" name="isCompleted" {% if task.isCompleted %}checked{% endif %} onchange="this.form.submit()">
+                    </form>
+                    <a href="{% url 'delete' task.id %}" style="color:red;">Delete</a>
+                    <a href="{% url 'edit' task.id %}" style="color:green;">Edit</a>
+                    
+                </li>
+                
+                {%endif%}
+                {% empty %}
+                <p>No completed tasks yet. Keep working on your goals!</p>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <footer>
+        <p>To Do List App &copy; 2025</p>
+    </footer>
+</body>
+
+</html>

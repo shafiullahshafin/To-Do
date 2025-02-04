@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ task.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #6200ea;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .task-details {
+            margin-bottom: 1.5rem;
+        }
+        .task-details p {
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+        .task-details p span {
+            font-weight: bold;
+        }
+        .status {
+            padding: 0.1rem 0.1rem;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        .completed {
+            background-color: #4caf50;
+            color: white;
+        }
+        .pending {
+            background-color: #ff9800;
+            color: white;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #6200ea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ task.title }}</h1>
+    </header>
+
+    <div class="container">
+        <div style="text-align: right;">
+            <a href="{% url 'edit' task.id %}">Edit</a>
+        </div>        
+        <div class="task-details">
+            <p><span>Description:</span> {{ task.desc }}</p>
+            <p><span>Created on:</span> {{ task.created }}</p>
+            <p><span>Due Date:</span> {{ task.dueDate }}</p>
+            <p><span>Status: </span>{% if task.isCompleted %}Completed{% else %}Incomplete{% endif %}</p>
+           
+        </div>
+
+        <a href="{% url 'home' %}" class="back-link">← Back to Home</a>
+    </div>
+</body>
+</html>
